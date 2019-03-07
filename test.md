@@ -58,8 +58,8 @@ Response:
 
 Extract the parameter for the build from the object:
 
-STD_CI_REFSPEC = obj["revisions"][current_revision]["ref"]
-STD_CI_CLONE_URL = obj["revisions"][current_revision]["fetch"]["url"]
+    STD_CI_REFSPEC = obj["revisions"][current_revision]["ref"]
+    STD_CI_CLONE_URL = obj["revisions"][current_revision]["fetch"]["url"]
 
 
 ## 2. Starting build artifacts job
