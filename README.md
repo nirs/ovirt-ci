@@ -1,7 +1,8 @@
 # oci
 
-Command line tool for working with oVirt CI.
+[![Build Status](https://travis-ci.org/nirs/oci.svg?branch=master)](https://travis-ci.org/nirs/oci)
 
+Command line tool for working with oVirt CI.
 
 ## Setup
 
@@ -27,3 +28,8 @@ Running oVirt system tests with a change:
 This commands builds artifacts with the patch above, and run oVirt
 system tests job with the built artifacts. When the test run is
 completed, add a comment about the run to the patch.
+
+
+## Running the tests
+
+    $ tox
