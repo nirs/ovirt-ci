@@ -20,8 +20,8 @@ class API(object):
 
     def build_info(self, change_num):
         """
-        Return information requiref for building the current reviesion of a
-        patch in jenkins.
+        Return information required for building the current revision of
+        a patch in Jenkins.
         """
         url = "/changes/?q={}&o=CURRENT_REVISION".format(change_num)
         res = self._request("GET", url)[0]
