@@ -7,15 +7,16 @@ Command line tool for working with oVirt CI.
 ## Setup
 
 Visit https://jenkins.ovirt.org/user/username/configure
-and create API Token.
+and create an API Token.
 
-Keep the token in the configuration file at:
+Keep your Jenkins user id and API Token in the configuration file at:
 
-    $HOME/.config/oci.conf
+    ~/.config/oci.conf
 
 Here is an example configuration file:
 
-    [auth]
+    [jenkins]
+    user_id = johnd
     api_token = 3e8cd699a2564d9ba2855831bf4cb5eb
 
 

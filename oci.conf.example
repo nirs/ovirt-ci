@@ -1,0 +1,14 @@
+[gerrit]
+# Gerrit host (default gerrit.ovirt.org)
+host = gerrit.ovirt.org
+
+[jenkins]
+# Jenkins host (default jenkins.ovirt.org)
+host = jenkins.ovirt.org
+
+# Your Jenkins user id.
+user_id = johnd
+
+# Your Jeknins API Token generated here:
+# https://jenkins.ovirt.org/user/username/configure
+api_token = c30d2404b7be492ebbdc2f53045a6fb6
