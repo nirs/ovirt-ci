@@ -1,17 +1,18 @@
 import json
 from six.moves import http_client
 
+# To prevent against Cross Site Script Inclusion (XSSI) attacks, the JSON
+# response body starts with a magic prefix line that must be stripped before
+# feeding the rest of the response body to a JSON parser.
+# https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
+_MAGIC_PREFIX = b")]}'\n"
+
 
 class Error(Exception):
     pass
 
 
 class API(object):
-
-    # To prevent against Cross Site Script Inclusion (XSSI) attacks, the JSON
-    # response body starts with a magic prefix line that must be stripped
-    # before feeding the rest of the response body to a JSON parser.
-    MAGIC_PREFIX = b")]}'\n"
 
     def __init__(self, host):
         self.host = host
@@ -38,7 +39,7 @@ class API(object):
         if res.status != http_client.OK:
             raise Error("Request failed status=%r body=%r", res.status, body)
 
-        if body.startswith(self.MAGIC_PREFIX):
-            body = body[len(self.MAGIC_PREFIX):]
+        if body.startswith(_MAGIC_PREFIX):
+            body = body[len(_MAGIC_PREFIX):]
 
         return json.loads(body)
