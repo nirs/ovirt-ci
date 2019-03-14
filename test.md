@@ -87,16 +87,25 @@ Response:
 
 Request:
 
-    $ curl -g -i https://jenkins.ovirt.org/queue/item/370116/api/json?pretty=true'&tree=executable[url],blocked'
+    $ curl -g -i https://jenkins.ovirt.org/queue/item/370116/api/json?pretty=true'&tree=executable[url],blocked,why'
 
 Response:
 
     {
       "_class" : "hudson.model.Queue$LeftItem",
       "blocked" : true,
+      "why": null
     }
 
 The task is blocked in the queue. We need to try again later.
+
+    {
+      "_class" : "hudson.model.Queue$LeftItem",
+      "blocked" : false,
+      "why" : "Waiting for next available executor on ‘integ-tests’"
+    }
+
+The task is waiting for available executor. We need to try again later.
 
     {
       "_class" : "hudson.model.Queue$LeftItem",
@@ -105,6 +114,7 @@ The task is blocked in the queue. We need to try again later.
         "_class" : "org.jenkinsci.plugins.workflow.job.WorkflowRun",
         "url" : "http://jenkins.ovirt.org/job/standard-manual-runner/77/"
       }
+      "why": null
     }
 
 The task is building.
