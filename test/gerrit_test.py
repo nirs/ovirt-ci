@@ -1,5 +1,4 @@
-from oci import gerrit
-
+from oci.oci import gerrit
 
 def test_build_info():
     ga = gerrit.API("gerrit.ovirt.org")
