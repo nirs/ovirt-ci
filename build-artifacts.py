@@ -13,7 +13,7 @@ log = logging.getLogger("build-artifacts")
 
 change = sys.argv[1]
 
-cfg = config.load("~/.config/oci.conf")
+cfg = config.load()
 
 ga = gerrit.API(host=cfg.gerrit.host)
 
