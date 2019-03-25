@@ -20,7 +20,7 @@ else:
 
 suite_type = "basic"
 
-cfg = config.load("~/.config/oci.conf")
+cfg = config.load()
 
 ga = gerrit.API(host=cfg.gerrit.host)
 
