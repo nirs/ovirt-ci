@@ -1,9 +1,7 @@
 import logging
-import os
 import sys
 
-from six.moves import configparser
-
+from oci import config
 from oci import gerrit
 from oci import jenkins
 
@@ -22,16 +20,14 @@ else:
 
 suite_type = "basic"
 
-config = configparser.ConfigParser()
-conf_path =  os.path.expanduser("~/.config/oci.conf")
-config.read(conf_path)
+cfg = config.load("~/.config/oci.conf")
 
-ga = gerrit.API(host=config.get("gerrit", "host"))
+ga = gerrit.API(host=cfg.gerrit.host)
 
 ja = jenkins.API(
-    host=config.get("jenkins", "host"),
-    user_id=config.get("jenkins", "user_id"),
-    api_token=config.get("jenkins", "api_token"))
+    host=cfg.jenkins.host,
+    user_id=cfg.jenkins.user_id,
+    api_token=cfg.jenkins.api_token)
 
 log.info("[ 1/8 ] Getting build info for change %s", change)
 info = ga.build_info(change)
