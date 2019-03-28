@@ -44,7 +44,7 @@ output.info("[ 4/8 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.fail("[ 5/8 ] Build artifacts %s failed", job_url)
+    output.failure("[ 5/8 ] Build artifacts %s failed", job_url)
     sys.exit(1)
 
 output.info(
