@@ -44,12 +44,12 @@ output.info("[ 4/8 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.fail("Build artifacts %s failed", job_url)
+    output.fail("[ 5/8 ] Build artifacts %s failed", job_url)
     sys.exit(1)
 
-output.info("[ 5/8 ] Starting oVirt system tests %s suite with custom "
-         "repos %s",
-         suite_type, job_url)
+output.info(
+    "[ 5/8 ] Starting oVirt system tests %s suite with custom repos %s",
+    suite_type, job_url)
 queue_url = ja.build(
     "ovirt-system-tests_manual",
     parameters={
@@ -66,7 +66,7 @@ output.info("[ 7/8 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.failure("System tests failed with: %s", result)
+    output.failure("[ 8/8 ] System tests failed with: %s", result)
     sys.exit(1)
 
-output.success("System tests completed successfully, congratulations!")
+output.success("[ 8/8 ] System tests completed successfully, congratulations!")
