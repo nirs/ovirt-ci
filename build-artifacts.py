@@ -37,7 +37,7 @@ output.info("[ 4/5 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.failure("Build artifcats failed with %s", result)
+    output.failure("[ 5/5 ] Build artifcats failed with %s", result)
     sys.exit(1)
 
 output.success("[ 5/5 ] Job completed successfuly, congragulations!")
