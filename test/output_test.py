@@ -1,5 +1,5 @@
-import pytest
 import sys
+import pytest
 from oci import output
 
 
