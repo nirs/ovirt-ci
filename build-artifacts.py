@@ -18,17 +18,17 @@ ja = jenkins.API(
 
 out = output.TextOutput()
 
-out.info("[ 1/5 ] Getting build info for change %s", change)
+out.step("[ 1/5 ] Getting build info for change %s", change)
 info = ga.build_info(change)
 
-out.info("[ 2/5 ] Starting build-artifacts job for %s", info)
+out.step("[ 2/5 ] Starting build-artifacts job for %s", info)
 queue_url = ja.run(
     url=info["url"], ref=info["ref"], stage="build-artifacts")
 
-out.info("[ 3/5 ] Waiting for queue item %s", queue_url)
+out.step("[ 3/5 ] Waiting for queue item %s", queue_url)
 job_url = ja.wait_for_queue(queue_url)
 
-out.info("[ 4/5 ] Waiting for job %s", job_url)
+out.step("[ 4/5 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
