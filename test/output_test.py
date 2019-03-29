@@ -10,11 +10,11 @@ class TTY(StringIO):
         return True
 
 
-def test_info():
+def test_step():
     f = TTY()
     o = output.TextOutput(f)
-    o.info("msg")
-    assert f.getvalue() == "msg\n"
+    o.step("Step")
+    assert f.getvalue() == "Step\n"
 
 
 def test_success():

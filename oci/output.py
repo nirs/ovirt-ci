@@ -10,7 +10,7 @@ class TextOutput(object):
     def __init__(self, file=sys.stdout):
         self._file = file
 
-    def info(self, fmt, *args):
+    def step(self, fmt, *args):
         self._write(fmt, args)
 
     def failure(self, fmt, *args):
