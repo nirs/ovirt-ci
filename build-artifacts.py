@@ -1,16 +1,9 @@
-import logging
 import sys
 
 from oci import config
 from oci import gerrit
 from oci import jenkins
 from oci import output
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
-
-log = logging.getLogger("build-artifacts")
 
 change = sys.argv[1]
 
