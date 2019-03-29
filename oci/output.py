@@ -4,26 +4,26 @@ GREEN = "\033[1;32m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 
-def info(s, *args):
-    _output(s, args)
 
-def failure(s, *args):
-    _output(s, args, color=RED)
+class TextOutput(object):
 
-def success(s, *args):
-    _output(s, args, color=GREEN)
+    def __init__(self, file=sys.stdout):
+        self._file = file
 
-def _output(fmt, args, color=None):
-    s = fmt % args
+    def info(self, fmt, *args):
+        self._write(fmt, args)
 
-    if sys.stdout.isatty():
-        s = _colorize(s, color)
+    def failure(self, fmt, *args):
+        self._write(fmt, args, color=RED)
 
-    sys.stdout.write(s + "\n")
-    sys.stdout.flush()
+    def success(self, fmt, *args):
+        self._write(fmt, args, color=GREEN)
 
-def _colorize(s, color):
-    if color is None:
-        return s
+    def _write(self, fmt, args, color=None):
+        s = fmt % args
 
-    return color + s + RESET
+        if self._file.isatty() and color:
+            s = color + s + RESET
+
+        self._file.write(s + "\n")
+        self._file.flush()

@@ -23,24 +23,26 @@ ja = jenkins.API(
     user_id=cfg.jenkins.user_id,
     api_token=cfg.jenkins.api_token)
 
-output.info("[ 1/8 ] Getting build info for change %s", change)
+out = output.TextOutput()
+
+out.info("[ 1/8 ] Getting build info for change %s", change)
 info = ga.build_info(change)
 
-output.info("[ 2/8 ] Starting build-artifacts job for %s", info)
+out.info("[ 2/8 ] Starting build-artifacts job for %s", info)
 queue_url = ja.run(
     url=info["url"], ref=info["ref"], stage="build-artifacts")
 
-output.info("[ 3/8 ] Waiting for queue item %s", queue_url)
+out.info("[ 3/8 ] Waiting for queue item %s", queue_url)
 job_url = ja.wait_for_queue(queue_url)
 
-output.info("[ 4/8 ] Waiting for job %s", job_url)
+out.info("[ 4/8 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.failure("[ 5/8 ] Build artifacts %s failed", job_url)
+    out.failure("[ 5/8 ] Build artifacts %s failed", job_url)
     sys.exit(1)
 
-output.info(
+out.info(
     "[ 5/8 ] Starting oVirt system tests %s suite with custom repos %s",
     suite_type, job_url)
 queue_url = ja.build(
@@ -52,14 +54,14 @@ queue_url = ja.build(
     }
 )
 
-output.info("[ 6/8 ] Waiting for queue item %s", queue_url)
+out.info("[ 6/8 ] Waiting for queue item %s", queue_url)
 job_url = ja.wait_for_queue(queue_url)
 
-output.info("[ 7/8 ] Waiting for job %s", job_url)
+out.info("[ 7/8 ] Waiting for job %s", job_url)
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
-    output.failure("[ 8/8 ] System tests failed with: %s", result)
+    out.failure("[ 8/8 ] System tests failed with: %s", result)
     sys.exit(1)
 
-output.success("[ 8/8 ] System tests completed successfully, congratulations!")
+out.success("[ 8/8 ] System tests completed successfully, congratulations!")
