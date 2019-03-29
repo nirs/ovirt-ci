@@ -7,23 +7,30 @@ RESET = "\033[0m"
 
 class TextOutput(object):
 
-    def __init__(self, file=sys.stdout):
+    def __init__(self, steps, file=sys.stdout):
+        self._steps = steps
         self._file = file
+        self._current = 0
 
     def step(self, fmt, *args):
+        self._current += 1
         self._write(fmt, args)
 
     def failure(self, fmt, *args):
+        self._current += 1
         self._write(fmt, args, color=RED)
 
     def success(self, fmt, *args):
+        self._current += 1
         self._write(fmt, args, color=GREEN)
 
     def _write(self, fmt, args, color=None):
-        s = fmt % args
+        msg = fmt % args
 
         if self._file.isatty() and color:
-            s = color + s + RESET
+            msg = color + msg + RESET
 
-        self._file.write(s + "\n")
+        line = "[ {}/{} ] {}\n".format(self._current, self._steps, msg)
+
+        self._file.write(line)
         self._file.flush()
