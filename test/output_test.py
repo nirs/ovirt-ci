@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import pytest
 from six import StringIO
@@ -10,36 +12,71 @@ class TTY(StringIO):
         return True
 
 
-def test_step():
-    f = TTY()
-    o = output.TextOutput(f)
-    o.step("Step")
-    assert f.getvalue() == "Step\n"
-
-
 def test_success():
     f = TTY()
-    o = output.TextOutput(f)
-    o.success("msg")
-    assert f.getvalue() == output.GREEN + "msg" + output.RESET + "\n"
+    o = output.TextOutput(4, file=f)
+    o.step("Getting change %s info", "54321")
+    o.step("Starting system tests %s suite", "basic")
+    o.step("Waiting for job %s", "https://jenkins.ovirt.org/job/98765")
+    o.success("Job completed successfully!")
+
+    out = f.getvalue()
+    assert out == """\
+[ 1/4 ] Getting change 54321 info
+[ 2/4 ] Starting system tests basic suite
+[ 3/4 ] Waiting for job https://jenkins.ovirt.org/job/98765
+[ 4/4 ] {}Job completed successfully!{}
+""".format(output.GREEN, output.RESET)
+
+    print()
+    print(out)
 
 
 def test_failure():
     f = TTY()
-    o = output.TextOutput(f)
-    o.failure("msg")
-    assert f.getvalue() == output.RED + "msg" + output.RESET + "\n"
+    o = output.TextOutput(4, file=f)
+    o.step("Getting change %s info", "54321")
+    o.step("Starting system tests %s suite", "basic")
+    o.step("Waiting for job %s", "https://jenkins.ovirt.org/job/98765")
+    o.failure("Oh dear, job failed")
+
+    out = f.getvalue()
+    assert out == """\
+[ 1/4 ] Getting change 54321 info
+[ 2/4 ] Starting system tests basic suite
+[ 3/4 ] Waiting for job https://jenkins.ovirt.org/job/98765
+[ 4/4 ] {}Oh dear, job failed{}
+""".format(output.RED, output.RESET)
+
+    print()
+    print(out)
 
 
-def test_no_tty(capsys):
-    f = StringIO()
-    o = output.TextOutput(f)
-    o.success("msg")
-    assert f.getvalue() == "msg\n"
-
-
-def test_args():
+def test_early_failure():
     f = TTY()
-    o = output.TextOutput(f)
-    o.success("msg %s %s", 1, 2)
-    assert f.getvalue() == output.GREEN + "msg 1 2" + output.RESET + "\n"
+    o = output.TextOutput(4, file=f)
+    o.step("Getting change %s info", "54321")
+    o.step("Starting system tests %s suite", "basic")
+    o.failure("Cannot start system tests")
+
+    out = f.getvalue()
+    assert out == """\
+[ 1/4 ] Getting change 54321 info
+[ 2/4 ] Starting system tests basic suite
+[ 3/4 ] {}Cannot start system tests{}
+""".format(output.RED, output.RESET)
+
+    print()
+    print(out)
+
+
+def test_no_tty():
+    f = StringIO()
+    o = output.TextOutput(2, file=f)
+    o.step("First step")
+    o.success("It worked!")
+
+    assert f.getvalue() == """\
+[ 1/2 ] First step
+[ 2/2 ] It worked!
+"""
