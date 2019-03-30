@@ -28,14 +28,16 @@ out.info(("project", info["project"]),
 queue_url = ja.run(
     url=info["url"], ref=info["ref"], stage="build-artifacts")
 
-out.step("Waiting for queue item %s", queue_url)
+out.step("Waiting until job is executed")
+out.info(("queue", queue_url))
 job_url = ja.wait_for_queue(queue_url)
 
-out.step("Waiting for job %s", job_url)
+out.step("Waiting until job is completed")
+out.info(("job", job_url))
 result = ja.wait_for_job(job_url)
 
 if result != "SUCCESS":
     out.failure("Build artifcats failed with %s", result)
     sys.exit(1)
 
-out.success("Job completed successfuly, congragulations!")
+out.success("Job completed successfully, congratulations!")
