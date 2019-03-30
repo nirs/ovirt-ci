@@ -28,7 +28,10 @@ out = output.TextOutput(steps=8)
 out.step("Getting build info for change %s", change)
 info = ga.build_info(change)
 
-out.step("Starting build-artifacts job for %s", info)
+out.step("Starting build-artifacts job")
+out.info(("project", info["project"]),
+         ("branch", info["branch"]),
+         ("patchset", info["patchset"]))
 queue_url = ja.run(
     url=info["url"], ref=info["ref"], stage="build-artifacts")
 

@@ -14,18 +14,22 @@ class TTY(StringIO):
 
 def test_success():
     f = TTY()
-    o = output.TextOutput(4, file=f)
+    o = output.TextOutput(5, file=f)
     o.step("Getting change %s info", "54321")
+    o.step("Starting build-artifacts job")
+    o.info(("project", "vdsm"), ("branch", "ovirt-4.3"), ("patchset", 2))
     o.step("Starting system tests %s suite", "basic")
     o.step("Waiting for job %s", "https://jenkins.ovirt.org/job/98765")
     o.success("Job completed successfully!")
 
     out = f.getvalue()
     assert out == """\
-[ 1/4 ] Getting change 54321 info
-[ 2/4 ] Starting system tests basic suite
-[ 3/4 ] Waiting for job https://jenkins.ovirt.org/job/98765
-[ 4/4 ] {}Job completed successfully!{}
+[ 1/5 ] Getting change 54321 info
+[ 2/5 ] Starting build-artifacts job
+        project: vdsm   branch: ovirt-4.3   patchset: 2
+[ 3/5 ] Starting system tests basic suite
+[ 4/5 ] Waiting for job https://jenkins.ovirt.org/job/98765
+[ 5/5 ] {}Job completed successfully!{}
 """.format(output.GREEN, output.RESET)
 
     print()
