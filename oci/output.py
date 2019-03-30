@@ -14,23 +14,30 @@ class TextOutput(object):
 
     def step(self, fmt, *args):
         self._current += 1
-        self._write(fmt, args)
+        self._write_title(fmt, args)
+
+    def info(self, *pairs):
+        content = "   ".join("{}: {}".format(k, v) for k, v in pairs)
+        line = "        {}\n".format(content)
+        self._write(line)
 
     def failure(self, fmt, *args):
         self._current += 1
-        self._write(fmt, args, color=RED)
+        self._write_title(fmt, args, color=RED)
 
     def success(self, fmt, *args):
         self._current += 1
-        self._write(fmt, args, color=GREEN)
+        self._write_title(fmt, args, color=GREEN)
 
-    def _write(self, fmt, args, color=None):
+    def _write_title(self, fmt, args, color=None):
         msg = fmt % args
 
         if self._file.isatty() and color:
             msg = color + msg + RESET
 
         line = "[ {}/{} ] {}\n".format(self._current, self._steps, msg)
+        self._write(line)
 
-        self._file.write(line)
+    def _write(self, s):
+        self._file.write(s)
         self._file.flush()

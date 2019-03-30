@@ -26,11 +26,15 @@ class API(object):
         url = "/changes/?q={}&o=CURRENT_REVISION".format(change_num)
         res = self._request("GET", url)[0]
 
-        cur_rev = res["current_revision"]
-        ref = res["revisions"][cur_rev]["ref"]
-        url = res["revisions"][cur_rev]["fetch"]["git"]["url"]
+        cur_rev = res["revisions"][res["current_revision"]]
 
-        return {"ref": ref, "url": url}
+        return {
+            "project": res["project"],
+            "branch": res["branch"],
+            "patchset": cur_rev["_number"],
+            "ref": cur_rev["ref"],
+            "url": cur_rev["fetch"]["git"]["url"],
+        }
 
     def _request(self, method, url):
         self._con.request(method, url)

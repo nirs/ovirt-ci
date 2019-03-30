@@ -6,6 +6,9 @@ def test_build_info():
     res = ga.build_info("98719")
 
     assert res == {
+        "project": "vdsm",
+        "branch": "ovirt-4.3",
+        "patchset": 2,
         "ref": "refs/changes/19/98719/2",
         "url": "git://gerrit.ovirt.org/vdsm",
     }
