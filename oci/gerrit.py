@@ -1,4 +1,5 @@
 import json
+import logging
 
 from contextlib import closing
 
@@ -9,6 +10,8 @@ from six.moves import http_client
 # feeding the rest of the response body to a JSON parser.
 # https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
 _MAGIC_PREFIX = b")]}'\n"
+
+log = logging.getLogger("gerrit")
 
 
 class Error(Exception):
@@ -42,6 +45,7 @@ class API(object):
     def _request(self, method, url):
         con = http_client.HTTPSConnection(self.host, timeout=self.timeout)
         with closing(con):
+            log.debug("%s host=%s url=%s", method, self.host, url)
             con.request(method, url)
             res = con.getresponse()
             body = res.read()
@@ -50,6 +54,7 @@ class API(object):
                     "Request failed host={} url={} reason={} body={!r}"
                     .format(host, url, res.reason, body))
 
+        log.debug("OK headers=%s", res.getheaders())
 
         if body.startswith(_MAGIC_PREFIX):
             body = body[len(_MAGIC_PREFIX):]
