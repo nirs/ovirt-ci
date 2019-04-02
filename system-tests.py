@@ -1,3 +1,5 @@
+import logging
+import os
 import sys
 
 from oci import config
@@ -13,6 +15,10 @@ else:
     engine_version = "master"
 
 suite_type = "basic"
+
+logging.basicConfig(
+    level=logging.DEBUG if "DEBUG" in os.environ else logging.WARNING,
+    format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
 
 cfg = config.load()
 

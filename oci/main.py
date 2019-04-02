@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 
 from . import config
@@ -12,8 +13,8 @@ def run():
         description='A command line tool for working with Ovirt CI')
 
     parser.add_argument(
-        '--verbose',
-        help="increase output verbosity",
+        '--debug',
+        help="Show noisy debug logs",
         action="store_true")
     subparsers = parser.add_subparsers(title="commands")
 
@@ -27,6 +28,10 @@ def run():
         help='Gerrit change number')
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.debug else logging.WARNING,
+        format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
 
     args.command(args)
 
