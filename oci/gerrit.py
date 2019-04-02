@@ -1,4 +1,7 @@
 import json
+
+from contextlib import closing
+
 from six.moves import http_client
 
 # To prevent against Cross Site Script Inclusion (XSSI) attacks, the JSON
@@ -16,7 +19,6 @@ class API(object):
 
     def __init__(self, host):
         self.host = host
-        self._con = http_client.HTTPSConnection(host)
 
     def build_info(self, change_num):
         """
@@ -37,11 +39,16 @@ class API(object):
         }
 
     def _request(self, method, url):
-        self._con.request(method, url)
-        res = self._con.getresponse()
-        body = res.read()
-        if res.status != http_client.OK:
-            raise Error("Request failed status=%r body=%r", res.status, body)
+        con = http_client.HTTPSConnection(self.host)
+        with closing(con):
+            con.request(method, url)
+            res = con.getresponse()
+            body = res.read()
+            if res.status != http_client.OK:
+                raise Error(
+                    "Request failed host={} url={} reason={} body={!r}"
+                    .format(host, url, res.reason, body))
+
 
         if body.startswith(_MAGIC_PREFIX):
             body = body[len(_MAGIC_PREFIX):]
