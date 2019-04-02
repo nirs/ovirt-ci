@@ -169,8 +169,6 @@ class API(object):
         con = http_client.HTTPSConnection(host, timeout=self.timeout)
         with closing(con):
             while True:
-                time.sleep(interval)
-
                 log.debug("GET host=%s url=%s", host, url)
                 con.request("GET", url)
 
@@ -189,6 +187,8 @@ class API(object):
                 if timeout and time.time() > deadline:
                     raise Timeout(
                         "Timeout waiting for host={} url={}".format(host, url))
+
+                time.sleep(interval)
 
     def _basic_credentials(self):
         """
