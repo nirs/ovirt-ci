@@ -7,5 +7,11 @@ python:
   - "3.6"
   - "3.7-dev"
 
+before_install:
+  - sudo apt-get install -y libgirepository1.0-dev gir1.2-networkmanager-1.0 network-manager
+
+install:
+  - pip install -r requirements.txt
+
 script:
   - pytest

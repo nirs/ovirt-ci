@@ -8,6 +8,8 @@ from contextlib import closing
 from six.moves import http_client
 from six.moves.urllib import parse as url_parse
 
+from . import network
+
 log = logging.getLogger("jenkins")
 
 
@@ -27,6 +29,7 @@ class API(object):
         self._user_id = user_id
         self._api_token = api_token
 
+    @network.retry()
     def run(self, url=None, ref=None, stage=None):
         """
         Build stage with specified ref for the project identified by url.
@@ -44,6 +47,7 @@ class API(object):
 
         return self.build("standard-manual-runner", parameters=params)
 
+    @network.retry()
     def build(self, job_name, parameters=None):
         """
         Build job_name with optional parameters.
@@ -78,6 +82,7 @@ class API(object):
             log.debug("CREATED headers=%s", res.getheaders())
             return res.getheader("location")
 
+    @network.retry()
     def wait_for_queue(self, url, interval=1, timeout=None):
         """
         Wait until queue item idenfied by url is executed.
@@ -129,6 +134,7 @@ class API(object):
 
         return status["executable"]["url"]
 
+    @network.retry()
     def wait_for_job(self, url, interval=10, timeout=None):
         """
         Wait until job idenfied by url is finished.

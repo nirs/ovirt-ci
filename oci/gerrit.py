@@ -5,6 +5,8 @@ from contextlib import closing
 
 from six.moves import http_client
 
+from . import network
+
 # To prevent against Cross Site Script Inclusion (XSSI) attacks, the JSON
 # response body starts with a magic prefix line that must be stripped before
 # feeding the rest of the response body to a JSON parser.
@@ -24,6 +26,7 @@ class API(object):
         self.host = host
         self.timeout = timeout
 
+    @network.retry()
     def build_info(self, change_num):
         """
         Return information required for building the current revision of
