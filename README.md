@@ -4,6 +4,19 @@
 
 Command line tool for working with oVirt CI.
 
+
+## Installation
+
+On Fedora 28 or later:
+
+    sudo dnf install python2-gobject
+
+If the distribution package is too old, you can install from pip as a
+user:
+
+    pip install -r requirements.txt --user
+
+
 ## Setup
 
 Visit https://jenkins.ovirt.org/user/username/configure
@@ -38,6 +51,21 @@ This commands builds artifacts with the patch above, and run oVirt
 system tests job with the built artifacts. When the test run is
 completed, add a comment about the run to the patch.
 
-## Running the tests
+
+## Contributing
+
+PRs are welcome!
+
+First instal tox.
+
+On Fedora:
+
+    $ sudo dnf install python2-tox
+
+If the distribution tox is too old, you can install using:
+
+    $ pip install tox --user.
+
+To run the tests locally, use:
 
     $ tox
