@@ -1,0 +1,3 @@
+#!/usr/bin/python
+from oci import main
+main.run()
