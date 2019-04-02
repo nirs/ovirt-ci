@@ -17,8 +17,9 @@ class Error(Exception):
 
 class API(object):
 
-    def __init__(self, host):
+    def __init__(self, host, timeout=20):
         self.host = host
+        self.timeout = timeout
 
     def build_info(self, change_num):
         """
@@ -39,7 +40,7 @@ class API(object):
         }
 
     def _request(self, method, url):
-        con = http_client.HTTPSConnection(self.host)
+        con = http_client.HTTPSConnection(self.host, timeout=self.timeout)
         with closing(con):
             con.request(method, url)
             res = con.getresponse()

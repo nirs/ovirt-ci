@@ -21,8 +21,9 @@ class Timeout(Error):
 
 class API(object):
 
-    def __init__(self, host, user_id, api_token):
+    def __init__(self, host, user_id, api_token, timeout=20):
         self.host = host
+        self.timeout = timeout
         self._user_id = user_id
         self._api_token = api_token
 
@@ -62,7 +63,7 @@ class API(object):
             "Authorization": "Basic {}".format(self._basic_credentials())
         }
 
-        con = http_client.HTTPSConnection(self.host)
+        con = http_client.HTTPSConnection(self.host, timeout=self.timeout)
         with closing(con):
             log.debug("POST host=%s url=%s body=%r headers=%s",
                       self.host, url, body, headers)
@@ -165,7 +166,7 @@ class API(object):
         if timeout:
             deadline = time.time() + timeout
 
-        con = http_client.HTTPSConnection(host)
+        con = http_client.HTTPSConnection(host, timeout=self.timeout)
         with closing(con):
             while True:
                 time.sleep(interval)
