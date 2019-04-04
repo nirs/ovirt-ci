@@ -24,7 +24,7 @@ def run():
 
     build_artifacts_parser.add_argument(
         'change',
-        help='number of the patch to run')
+        help='Gerrit change number')
 
     args = parser.parse_args()
 
@@ -65,3 +65,5 @@ def build_artifacts(args):
     if result != "SUCCESS":
         out.failure("Build artifcats failed with %s", result)
         sys.exit(1)
+
+    out.success("Job completed successfully, congratulations!")
