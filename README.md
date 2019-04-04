@@ -22,14 +22,21 @@ Here is an example configuration file:
 
 ## Usage
 
+Building artifacts for a change:
+
+    $ ./ovirt-ci build-artifacts 54321
+
+This command will invoke the build-artifacts stage for the project. You
+can use the job URL printed by the command to run oVirt system tests
+manually.
+
 Running oVirt system tests with a change:
 
-    $ oci test 54321
+    $ python system-tests.py 54321
 
 This commands builds artifacts with the patch above, and run oVirt
 system tests job with the built artifacts. When the test run is
 completed, add a comment about the run to the patch.
-
 
 ## Running the tests
 
