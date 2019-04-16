@@ -7,6 +7,9 @@ from . import gerrit
 from . import jenkins
 from . import output
 
+job_url = ''
+queue_url = ''
+
 
 def run():
     parser = argparse.ArgumentParser(
@@ -27,6 +30,19 @@ def run():
         'change',
         help='Gerrit change number')
 
+    system_tests_parser = subparsers.add_parser(
+        "system-tests",
+        help="system-tests for a change")
+    system_tests_parser.set_defaults(command=system_tests)
+
+    system_tests_parser.add_argument(
+        'change',
+        help='Gerrit change number')
+
+    system_tests_parser.add_argument(
+        '--engine_version',
+        default='master')
+
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -36,15 +52,61 @@ def run():
     args.command(args)
 
 
-def build_artifacts(args):
+def system_tests(args):
+    global queue_url
+    global job_url
     cfg = config.load()
 
-    ga = gerrit.API(host=cfg.gerrit.host)
+    suite_type = "basic"
 
     ja = jenkins.API(
         host=cfg.jenkins.host,
         user_id=cfg.jenkins.user_id,
         api_token=cfg.jenkins.api_token)
+
+    build_artifacts(args, (cfg, ja))
+
+    out = output.TextOutput(steps=8)
+
+    out.step("Starting oVirt system tests job")
+    out.info(("suite", suite_type), ("repo", job_url))
+    queue_url = ja.build(
+        "ovirt-system-tests_manual",
+        parameters={
+            "CUSTOM_REPOS": job_url,
+            "ENGINE_VERSION": args.engine_version,
+            "SUITE_TYPE": suite_type,
+        }
+    )
+
+    out.step("Waiting until job is executed")
+    out.info(("queue", queue_url))
+    job_url = ja.wait_for_queue(queue_url)
+
+    out.step("Waiting until job is completed")
+    out.info(("job", job_url))
+    result = ja.wait_for_job(job_url)
+
+    if result != "SUCCESS":
+        out.failure("System tests failed with: %s", result)
+        sys.exit(1)
+
+    out.success("System tests completed successfully, congratulations!")
+
+
+def build_artifacts(args, (cfg, ja)=None):
+    global queue_url
+    global job_url
+
+    if not cfg:
+        cfg = config.load()
+
+        ja = jenkins.API(
+            host=cfg.jenkins.host,
+            user_id=cfg.jenkins.user_id,
+            api_token=cfg.jenkins.api_token)
+
+    ga = gerrit.API(host=cfg.gerrit.host)
 
     out = output.TextOutput(steps=5)
 
