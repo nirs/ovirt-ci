@@ -37,7 +37,10 @@ def run():
         help='Gerrit change number')
 
     system_tests_parser.add_argument(
-        '--engine_version',
+        '--engine-version',
+        help='All supported version can be found at '
+             'https://jenkins.ovirt.org/job/ovirt-system-tests_manual/build '
+             'under "ENGINE_VERSION"',
         default='master')
 
     args = parser.parse_args()
