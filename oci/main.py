@@ -7,9 +7,6 @@ from . import gerrit
 from . import jenkins
 from . import output
 
-job_url = ''
-queue_url = ''
-
 
 def run():
     parser = argparse.ArgumentParser(
@@ -53,20 +50,47 @@ def run():
 
 
 def system_tests(args):
-    global queue_url
-    global job_url
     cfg = config.load()
 
     suite_type = "basic"
+
+    ga = gerrit.API(host=cfg.gerrit.host)
 
     ja = jenkins.API(
         host=cfg.jenkins.host,
         user_id=cfg.jenkins.user_id,
         api_token=cfg.jenkins.api_token)
 
-    build_artifacts(args, (cfg, ja))
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.WARNING,
+        format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
 
     out = output.TextOutput(steps=8)
+
+    # TODO: the build-artifacts flow was copied from build-artifacts.py. Find a way
+    # to reuse the code instead of copying it.
+
+    out.step("Getting build info for change %s", args.change)
+    info = ga.build_info(args.change)
+
+    out.step("Starting build-artifacts job")
+    out.info(("project", info["project"]),
+             ("branch", info["branch"]),
+             ("patchset", info["patchset"]))
+    queue_url = ja.run(
+        url=info["url"], ref=info["ref"], stage="build-artifacts")
+
+    out.step("Waiting until job is executed")
+    out.info(("queue", queue_url))
+    job_url = ja.wait_for_queue(queue_url)
+
+    out.step("Waiting until job is completed")
+    out.info(("job", job_url))
+    result = ja.wait_for_job(job_url)
+
+    if result != "SUCCESS":
+        out.failure("Build artifacts %s failed", job_url)
+        sys.exit(1)
 
     out.step("Starting oVirt system tests job")
     out.info(("suite", suite_type), ("repo", job_url))
@@ -94,19 +118,15 @@ def system_tests(args):
     out.success("System tests completed successfully, congratulations!")
 
 
-def build_artifacts(args, (cfg, ja)=None):
-    global queue_url
-    global job_url
-
-    if not cfg:
-        cfg = config.load()
-
-        ja = jenkins.API(
-            host=cfg.jenkins.host,
-            user_id=cfg.jenkins.user_id,
-            api_token=cfg.jenkins.api_token)
+def build_artifacts(args):
+    cfg = config.load()
 
     ga = gerrit.API(host=cfg.gerrit.host)
+
+    ja = jenkins.API(
+        host=cfg.jenkins.host,
+        user_id=cfg.jenkins.user_id,
+        api_token=cfg.jenkins.api_token)
 
     out = output.TextOutput(steps=5)
 
