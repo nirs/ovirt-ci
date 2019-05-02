@@ -29,7 +29,6 @@ class API(object):
         self._user_id = user_id
         self._api_token = api_token
 
-    @network.retry()
     def run(self, url=None, ref=None, stage=None):
         """
         Build stage with specified ref for the project identified by url.
