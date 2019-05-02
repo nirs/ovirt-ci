@@ -93,14 +93,10 @@ def system_tests(args):
 
     out.step("Starting oVirt system tests job")
     out.info(("suite", suite_type), ("repo", job_url))
-    queue_url = ja.build(
-        "ovirt-system-tests_manual",
-        parameters={
-            "CUSTOM_REPOS": job_url,
-            "ENGINE_VERSION": args.engine_version,
-            "SUITE_TYPE": suite_type,
-        }
-    )
+    queue_url = ja.system_tests(
+        custom_repos=job_url,
+        engine_version=args.engine_version,
+        suite_type=suite_type)
 
     out.step("Waiting until job is executed")
     out.info(("queue", queue_url))
