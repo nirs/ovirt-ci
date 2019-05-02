@@ -46,6 +46,36 @@ class API(object):
 
         return self.build("standard-manual-runner", parameters=params)
 
+    def system_tests(self, custom_repos=None, engine_version="master",
+                     suite_type="basic"):
+        """
+        Run oVirt system tests manual job.
+
+        Arguments:
+            custom_repos (str): build-artifacts job URL for project used in
+                oVirt system tests, or yum repo URL (rec:https://...) with the
+                pakcages that should be used in this run.
+            engine_version (str): Engine version to use for this run. For available
+                versions see ENGINE_VERSION popup menu at:
+                https://jenkins.ovirt.org/job/ovirt-system-tests_manual/build
+            suite_type (str): Suite type to run. For available suite types see
+                SUITE_TYPE popup menu at:
+                https://jenkins.ovirt.org/job/ovirt-system-tests_manual/build
+
+        Return a URL to the Jenkins queue item. The caller need to monitor this
+        URL to discover the acutal job URL.
+        """
+        params = {}
+        if custom_repos:
+            # TODO: Support multiple repos.
+            params["CUSTOM_REPOS"] = custom_repos
+        if engine_version:
+            params["ENGINE_VERSION"] = engine_version
+        if suite_type:
+            params["SUITE_TYPE"] = suite_type
+
+        return self.build("ovirt-system-tests_manual", parameters=params)
+
     @network.retry()
     def build(self, job_name, parameters=None):
         """
