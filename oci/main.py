@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import daemon
 
 from . import config
 from . import gerrit
@@ -16,12 +17,17 @@ def run():
         '--debug',
         help="Show noisy debug logs",
         action="store_true")
+
+    parser.add_argument(
+        '--daemon',
+        help="Run as daemon and redirect output to /var/tmp/oci_{command}_{change id}.log",
+        action="store_true")
     subparsers = parser.add_subparsers(title="commands")
 
     build_artifacts_parser = subparsers.add_parser(
         "build-artifacts",
         help="build artifacts for a change")
-    build_artifacts_parser.set_defaults(command=build_artifacts)
+    build_artifacts_parser.set_defaults(command=invoke_build_artifacts)
 
     build_artifacts_parser.add_argument(
         'change',
@@ -30,7 +36,7 @@ def run():
     system_tests_parser = subparsers.add_parser(
         "system-tests",
         help="run system tests for a change")
-    system_tests_parser.set_defaults(command=system_tests)
+    system_tests_parser.set_defaults(command=invoke_system_tests)
 
     system_tests_parser.add_argument(
         'change',
@@ -51,6 +57,13 @@ def run():
 
     args.command(args)
 
+def invoke_system_tests(args):
+    if args.daemon:
+        with open("/var/tmp/oci_system_tests_{}_.log".format(args.change), 'w') as f:
+            with daemon.DaemonContext(stdout=f,stderr=f):
+                system_tests(args)
+    else:
+        system_tests(args)
 
 def system_tests(args):
     cfg = config.load()
@@ -112,6 +125,13 @@ def system_tests(args):
 
     out.success("System tests completed successfully, congratulations!")
 
+def invoke_build_artifacts(args):
+    if args.daemon:
+        with open("/var/tmp/oci_build_artifcats_{}_.log".format(args.change), 'w') as f:
+            with daemon.DaemonContext(stdout=f,stderr=f):
+                build_artifacts(args)
+    else:
+        build_artifacts(args)
 
 def build_artifacts(args):
     cfg = config.load()
