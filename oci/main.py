@@ -43,6 +43,19 @@ def run():
              'under "ENGINE_VERSION"',
         default='master')
 
+    run_parser = subparsers.add_parser(
+        'run',
+        help='run stage for a change')
+    run_parser.set_defaults(command=run_stage)
+
+    run_parser.add_argument(
+        'stage',
+        help='stage name')
+
+    run_parser.add_argument(
+        'change',
+        help='Gerrit change number')
+
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -50,6 +63,44 @@ def run():
         format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
 
     args.command(args)
+
+
+def run_stage(args):
+    cfg = config.load()
+
+    ga = gerrit.API(host=cfg.gerrit.host)
+
+    ja = jenkins.API(
+        host=cfg.jenkins.host,
+        user_id=cfg.jenkins.user_id,
+        api_token=cfg.jenkins.api_token)
+
+    out = output.TextOutput(steps=5)
+
+    out.step("Getting build info for change %s", args.change)
+    info = ga.build_info(args.change)
+
+    out.step("Starting %s job", args.stage)
+    out.info(("project", info["project"]),
+             ("branch", info["branch"]),
+             ("patchset", info["patchset"]))
+
+    queue_url = ja.run(
+        url=info["url"], ref=info["ref"], stage=args.stage)
+
+    out.step("Waiting until job is executed")
+    out.info(("queue", queue_url))
+    job_url = ja.wait_for_queue(queue_url)
+
+    out.step("Waiting until job is completed")
+    out.info(("job", job_url))
+    result = ja.wait_for_job(job_url)
+
+    if result != "SUCCESS":
+        out.failure("%s failed with %s", args.stage, result)
+        sys.exit(1)
+
+    out.success("Job completed successfully, congratulations!")
 
 
 def system_tests(args):
