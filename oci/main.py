@@ -61,7 +61,7 @@ def run():
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.WARNING,
         format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
-    
+
     args.command(args)
 
 
