@@ -43,17 +43,16 @@ def run():
              'under "ENGINE_VERSION"',
         default='master')
 
-    stage_parser = subparsers.add_parser(
+    run_parser = subparsers.add_parser(
         'run',
         help='run stage for a change')
-    stage_parser.set_defaults(command=run_stage)
+    run_parser.set_defaults(command=run_stage_parser)
 
-    stage_parser.add_argument(
-        '--stage',
-        '-s',
+    run_parser.add_argument(
+        'stage',
         help='stage name')
 
-    stage_parser.add_argument(
+    run_parser.add_argument(
         'change',
         help='Gerrit change number')
 
@@ -62,10 +61,11 @@ def run():
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.WARNING,
         format="%(asctime)s %(levelname)-7s [%(name)s] %(message)s")
+    
     args.command(args)
 
 
-def run_stage(args):
+def run_stage_parser(args):
     cfg = config.load()
 
     ga = gerrit.API(host=cfg.gerrit.host)
