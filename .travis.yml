@@ -8,8 +8,12 @@ python:
   - "3.7"
   - "3.8-dev"
 
-before_install:
-  - sudo apt-get install -y libgirepository1.0-dev gir1.2-networkmanager-1.0 network-manager
+addons:
+  apt:
+    packages:
+      - libgirepository1.0-dev
+      - gir1.2-networkmanager-1.0
+      - network-manager
 
 install:
   - pip install -r requirements.txt
