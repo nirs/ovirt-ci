@@ -1,4 +1,4 @@
-# oci
+# Ovirt-CI
 
 [![Build Status](https://travis-ci.org/nirs/oci.svg?branch=master)](https://travis-ci.org/nirs/oci)
 
@@ -24,7 +24,7 @@ and create an API Token.
 
 Keep your Jenkins user id and API Token in the configuration file at:
 
-    ~/.config/oci.conf
+    ~/.config/ovirt-ci.conf
 
 Here is an example configuration file:
 

@@ -1,4 +1,4 @@
-from oci import gerrit
+from ovirt_ci import gerrit
 
 
 def test_build_info():
