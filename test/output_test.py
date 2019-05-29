@@ -3,7 +3,7 @@ from __future__ import print_function
 import sys
 import pytest
 from six import StringIO
-from oci import output
+from ovirt_ci import output
 
 
 class TTY(StringIO):

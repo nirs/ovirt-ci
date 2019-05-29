@@ -26,7 +26,7 @@ def config_parser():
     return cfg
 
 
-def load(path=os.path.expanduser("~/.config/oci.conf")):
+def load(path=os.path.expanduser("~/.config/ovirt-ci.conf")):
     cfg = config_parser()
 
     cfg.read(path)
