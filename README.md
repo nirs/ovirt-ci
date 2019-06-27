@@ -16,10 +16,15 @@ user:
 
     pip install -r requirements.txt --user
 
+On Ubuntu:
+
+    sudo apt install gir1.2-nm-1.0
+    pip install -r requirements.txt --user
+
 
 ## Setup
 
-Visit https://jenkins.ovirt.org/user/username/configure
+Visit https://jenkins.ovirt.org/user/<username>/configure
 and create an API Token.
 
 Keep your Jenkins user id and API Token in the configuration file at:
