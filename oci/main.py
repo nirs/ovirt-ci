@@ -33,6 +33,11 @@ def run():
     system_tests_parser.set_defaults(command=system_tests)
 
     system_tests_parser.add_argument(
+        '--coverage',
+        help="add coverage report to results",
+        action="store_true")
+
+    system_tests_parser.add_argument(
         'change',
         help='Gerrit change number')
 
@@ -96,7 +101,8 @@ def system_tests(args):
     queue_url = ja.system_tests(
         custom_repos=job_url,
         engine_version=args.engine_version,
-        suite_type=suite_type)
+        suite_type=suite_type,
+        coverage=args.coverage)
 
     out.step("Waiting until job is executed")
     out.info(("queue", queue_url))
