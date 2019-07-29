@@ -47,7 +47,7 @@ class API(object):
         return self.build("standard-manual-runner", parameters=params)
 
     def system_tests(self, custom_repos=None, engine_version="master",
-                     suite_type="basic"):
+                     suite_type="basic", coverage=False):
         """
         Run oVirt system tests manual job.
 
@@ -61,6 +61,7 @@ class API(object):
             suite_type (str): Suite type to run. For available suite types see
                 SUITE_TYPE popup menu at:
                 https://jenkins.ovirt.org/job/ovirt-system-tests_manual/build
+            coverage (bool): Add coverage report to build artifacts.
 
         Return a URL to the Jenkins queue item. The caller need to monitor this
         URL to discover the acutal job URL.
@@ -73,6 +74,7 @@ class API(object):
             params["ENGINE_VERSION"] = engine_version
         if suite_type:
             params["SUITE_TYPE"] = suite_type
+        params["COVERAGE"] = "yes" if coverage else "no"
 
         return self.build("ovirt-system-tests_manual", parameters=params)
 
