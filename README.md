@@ -1,4 +1,4 @@
-# Ovirt-CI
+# oVirt-CI
 
 [![Build Status](https://travis-ci.org/nirs/oci.svg?branch=master)](https://travis-ci.org/nirs/oci)
 
