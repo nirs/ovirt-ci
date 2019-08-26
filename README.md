@@ -7,15 +7,28 @@ Command line tool for working with oVirt CI.
 
 ## Installation
 
-On Fedora 28 or later:
+On Fedora 29 or later:
 
-    sudo dnf install python2-gobject
+    sudo dnf install \
+        NetworkManager \
+        gcc \
+        gobject-introspection-devel \
+        python2-devel \
+        python3-devel
 
-If the distribution package is too old, you can install from pip as a
-user:
+On Ubuntu Xenial:
+
+    sudo apt-get install \
+        gcc \
+        gir1.2-networkmanager-1.0 \
+        libgirepository1.0-dev \
+        network-manager \
+        python2-dev \
+        python3-dev
+
+Install requirements:
 
     pip install -r requirements.txt --user
-
 
 ## Setup
 
