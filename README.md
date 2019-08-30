@@ -1,6 +1,6 @@
 # oVirt-CI
 
-[![Build Status](https://travis-ci.org/nirs/oci.svg?branch=master)](https://travis-ci.org/nirs/oci)
+[![Build Status](https://travis-ci.org/nirs/ovirt-ci.svg?branch=master)](https://travis-ci.org/nirs/ovirt-ci)
 
 Command line tool for working with oVirt CI.
 
