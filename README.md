@@ -58,7 +58,7 @@ manually.
 
 Running oVirt system tests with a change:
 
-    $ ovirt-ci system-tests 54321
+    $ ./ovirt-ci system-tests 54321
 
 This commands builds artifacts with the patch above, and run oVirt
 system tests job with the built artifacts. When the test run is
