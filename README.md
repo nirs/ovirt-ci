@@ -11,6 +11,7 @@ On Fedora 29 or later:
 
     sudo dnf install \
         NetworkManager \
+        cairo-gobject-devel \
         gcc \
         gobject-introspection-devel \
         python2-devel \
