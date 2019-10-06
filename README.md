@@ -46,6 +46,8 @@ Here is an example configuration file:
     user_id = johnd
     api_token = 3e8cd699a2564d9ba2855831bf4cb5eb
 
+Full example is available at: [ovirt-ci.conf.example](ovirt-ci.conf.example)
+
 
 ## Usage
 
