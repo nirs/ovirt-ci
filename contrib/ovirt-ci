@@ -1,0 +1,23 @@
+# ovirt-ci completion                             -*- shell-script -*-
+
+_ovirt-ci()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+	'-h'|'--help')
+	    return
+	    ;;
+    esac
+    
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $(compgen -W "--help --debug" -- "$cur") )
+    else
+        COMPREPLY=( $(compgen -W "build-artifacts system-tests run" -- "$cur") )
+    fi
+
+} &&
+complete -F _ovirt-ci ovirt-ci
+
+# ex: filetype=sh
