@@ -48,10 +48,14 @@ Here is an example configuration file:
 
 Full example is available at: [ovirt-ci.conf.example](ovirt-ci.conf.example)
 
-Optionally, you can setup bash auto-completetion for ovirt-ci tool.
-Make sure you have installed package `bash-completion`.
-Copy `ovirt-ci/contrib/ovirt-ci` to `/usr/share/bash-completion/completions/`
-and once you start new bash, you can use `<tab>` to auto-complete ovirt-ci commands.
+### Bash auto-completion
+
+To setup bash auto-completion for ovirt-ci tool, install the
+`bash-completion` package, and copy `bash-completion/ovirt-ci` to
+`/usr/share/bash-completion/completions/`.
+
+When starting new bash shell, you can use `<tab>` to auto-complete
+ovirt-ci commands.
 
 ## Usage
 

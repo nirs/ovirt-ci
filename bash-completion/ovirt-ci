@@ -10,7 +10,7 @@ _ovirt-ci()
 	    return
 	    ;;
     esac
-    
+
     if [[ "$cur" == -* ]]; then
         COMPREPLY=( $(compgen -W "--help --debug" -- "$cur") )
     else
